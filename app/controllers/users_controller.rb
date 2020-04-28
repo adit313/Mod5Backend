@@ -21,15 +21,13 @@ class UsersController < ApplicationController
   def create
     if User.find_by(device: user_params[:device])
       @user = User.find_by(device: user_params[:device])
-      @session = Session.find_or_create_by(user_id: @user.id, date: params[:date])
-      @round = Round.create(session_id: @session.id, score: params[:score])
     else
       @user = User.new(user_params)
-      @session = Session.find_or_create_by(user_id: @user.id, date: params[:date])
-      @round = Round.create(session_id: @session.id, score: params[:score])
     end
 
     if @user.save
+      @session = Session.find_or_create_by(user_id: @user.id, date: params[:date])
+      @round = Round.create(session_id: @session.id, score: params[:score])
       render json: {"user" => @user, "session" => @session, "round" => @round}, status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
