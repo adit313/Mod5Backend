@@ -25,6 +25,8 @@ class UsersController < ApplicationController
       @round = Round.create(session_id: @session.id, score: params[:score])
     else
       @user = User.new(user_params)
+      @session = Session.find_or_create_by(user_id: @user.id, date: params[:date])
+      @round = Round.create(session_id: @session.id, score: params[:score])
     end
 
     if @user.save
